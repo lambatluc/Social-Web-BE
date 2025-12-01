@@ -32,12 +32,6 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: string): Promise<boolean> {
-    return this.authService.logout(userId);
-  }
-
   @Public()
   @UseGuards(RtGuard)
   @Post('refresh')

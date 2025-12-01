@@ -7,6 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { AtGuard } from './auth/guards/at.guard';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AtGuard } from './auth/guards/at.guard';
         limit: 10,
       },
     ]),
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [

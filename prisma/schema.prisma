@@ -7,11 +7,57 @@ datasource db {
 }
 
 model User {
-  id                 String   @id @default(uuid())
+  id                 String        @id @default(uuid())
   username           String
-  email              String   @unique
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  email              String        @unique
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
   hashedRefreshToken String?
   password           String
+  posts              Post[]
+  postLikes          PostLike[]
+  postComments       PostComment[]
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  creatorId String   @map("creator_id")
+  caption   String?  @db.Text
+  imageUrl  String?  @map("image_url") @db.Text
+  location  String?
+  tags      String[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  creator  User          @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  likes    PostLike[]
+  comments PostComment[]
+
+  @@map("posts")
+}
+
+model PostLike {
+  id        String   @id @default(uuid())
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("post_likes")
+}
+
+model PostComment {
+  id        String   @id @default(uuid())
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("post_comments")
 }

@@ -63,22 +63,6 @@ export class AuthService {
     return { user: userWithoutPassword as IUser, tokens };
   }
 
-  async logout(userId: string): Promise<boolean> {
-    await this.databaseService.user.updateMany({
-      where: {
-        id: userId,
-        hashedRefreshToken: {
-          not: null,
-        },
-      },
-      data: {
-        hashedRefreshToken: null,
-      },
-    });
-
-    return true;
-  }
-
   async refreshTokens(userId: string, refreshToken: string): Promise<ITokens> {
     // Find user
     const user = await this.databaseService.user.findUnique({
@@ -122,7 +106,7 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.JWT_ACCESS_SECRET || 'at-secret',
-        expiresIn: '15m',
+        expiresIn: '1d',
       }),
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.JWT_REFRESH_SECRET || 'rt-secret',
