@@ -8,9 +8,11 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { PaginationQueryDto } from '../posts/dto/pagination-query.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('users')
@@ -24,8 +26,17 @@ export class UsersController {
   }
   @Public()
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.usersService.findAll(query.page, query.limit);
+  }
+
+  @Public()
+  @Get('with-posts/sorted-by-likes')
+  getUsersWithPostsSortedByLikes(@Query() query: PaginationQueryDto) {
+    return this.usersService.getUsersWithPostsSortedByLikes(
+      query.page,
+      query.limit,
+    );
   }
 
   @Get(':id')

@@ -10,28 +10,13 @@ import { AtGuard } from './auth/guards/at.guard';
 import { PostsModule } from './posts/posts.module';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    UsersModule,
-    AuthModule,
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 10,
-      },
-    ]),
-    PostsModule,
-  ],
+  imports: [DatabaseModule, UsersModule, AuthModule, PostsModule],
   controllers: [AppController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: AtGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
     },
   ],
 })

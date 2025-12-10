@@ -8,8 +8,10 @@ datasource db {
 
 model User {
   id                 String        @id @default(uuid())
+  name               String        @default("")
   username           String
   email              String        @unique
+  imageUrl           String?       @map("image_url") @db.Text
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
   hashedRefreshToken String?

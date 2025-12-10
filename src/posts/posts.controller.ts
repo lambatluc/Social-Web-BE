@@ -11,7 +11,7 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import {
   GetCurrentUserId,
@@ -36,6 +36,34 @@ export class PostsController {
     @GetCurrentUserIdOptional() userId?: string,
   ) {
     return this.postsService.findAll(query.page, query.limit, userId);
+  }
+
+  @Get('user/:userId')
+  getPostsByUser(
+    @Param('userId') userId: string,
+    @Query() query: PaginationQueryDto,
+    @GetCurrentUserIdOptional() currentUserId?: string,
+  ) {
+    return this.postsService.getPostsByUser(
+      userId,
+      query.page,
+      query.limit,
+      currentUserId,
+    );
+  }
+
+  @Get('liked/:userId')
+  getLikedPostsByUser(
+    @Param('userId') userId: string,
+    @Query() query: PaginationQueryDto,
+    @GetCurrentUserIdOptional() currentUserId?: string,
+  ) {
+    return this.postsService.getLikedPostsByUser(
+      userId,
+      query.page,
+      query.limit,
+      currentUserId,
+    );
   }
 
   @Get(':id')
